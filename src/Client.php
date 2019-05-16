@@ -55,21 +55,27 @@ class Client {
         if($order->getOtherCosts()) {
             $data['otherCosts'] = $order->getOtherCosts();
         }
+        
+        $cartItems = $order->getCartItems();
 
-        if(!empty($order->getCartItems())) {
+        if(!empty($cartItems)) {
             $data['cart'] = [];
             foreach ($order->getCartItems() as $cartItem) {
                 $item = [];
-                if(!empty($cartItem->getId())) {
+                $id = $cartItem->getId();
+                $name = $cartItem->getName();
+                $unitPrice = $cartItem->getUnitPrice();
+                $quantity = $cartItem->getQuantity();
+                if(!empty($id)) {
                     $item['itemId'] = $cartItem->getId();
                 }
-                if(!empty($cartItem->getName())) {
+                if(!empty($name)) {
                     $item['productName'] = $cartItem->getName();
                 }
-                if(!empty($cartItem->getUnitPrice())) {
+                if(!empty($unitPrice)) {
                     $item['unitPrice'] = $cartItem->getUnitPrice();
                 }
-                if(!empty($cartItem->getQuantity())) {
+                if(!empty($quantity)) {
                     $item['quantity'] = $cartItem->getQuantity();
                 }
                 $data['cart'][] = $item;
@@ -138,7 +144,8 @@ class Client {
      */
     public function validateOrder(Order $order) {
         $errors = [];
-        if(empty($order->getId())) {
+        $id = $order->getId();
+        if(empty($id)) {
             $errors[] = 'Missing order code';
         }
         return $errors;
